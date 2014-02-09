@@ -5,56 +5,56 @@ import scala.util.Random
 /**
  * Created by volcom on 06/02/14.
  */
-class SmallestEnclosingCircle {
+case class SmallestEnclosingCircle(points: Point*) {
 
-  def makeCircle(points: Seq[Point]): Circle = {
-    var c: Circle = null
-    var current = 0
-    val shuffled = Random.shuffle(points)
-    shuffled.foreach(p => {
-      if (c == null || !c.contains(p)) {
-        c = makeCircleOnePoint(shuffled.slice(0, current + 1), p)
+  def makeCircle: Circle = makeCircleShuffled(Random.shuffle(points))
+
+  private def makeCircleShuffled(shuffled: Seq[Point]): Circle =
+    shuffled.foldLeft((None: Option[Circle], 0))((agg, p) => {
+      var currCircle = agg._1
+      val index = agg._2
+      if (currCircle.isEmpty || !currCircle.get.contains(p)) {
+        currCircle = Some(makeCircleOnePoint(shuffled.slice(0, index + 1), p))
       }
-      current += 1
-    })
-    c
-  }
+      (currCircle, index + 1)
+    })._1.getOrElse(null)
 
-  private def makeCircleOnePoint(points: Seq[Point], point: Point): Circle = {
-    var c = Circle(point, 0)
-    var current = 0
-    points.foreach(p => {
-      c = c.radius match {
+  private def makeCircleOnePoint(pointsSeq: Seq[Point], point: Point): Circle =
+    pointsSeq.foldLeft((Circle(point, 0), 0))((agg, p) => {
+      val index = agg._2
+      val circle = if (agg._1.contains(p)) {
+        agg._1
+      } else agg._1.radius match {
         case 0 => makeDiameterCircle(point, p)
-        case _ => makeCircleTwoPoints(points.slice(0, current + 1), point, p)
+        case _ => makeCircleTwoPoints(pointsSeq.slice(0, index + 1), point, p)
       }
-      current += 1
-    })
-    c
-  }
+      (circle, index + 1)
+    })._1
 
-  private def makeCircleTwoPoints(points: Seq[Point], p: Point, q: Point): Circle = {
+  private def makeCircleTwoPoints(pointsSeq: Seq[Point], p: Point, q: Point): Circle = {
     val tmp = makeDiameterCircle(p, q)
-    if (tmp.contains(points)) {
+    if (tmp.contains(pointsSeq)) {
       tmp
     } else {
-      var left: Circle = null
-      var right: Circle = null
-      points.foreach(point => {
+      val leftAndRight = pointsSeq.foldLeft((None: Option[Circle], None: Option[Circle]))((agg, point) => {
+        var left = agg._1
+        var right = agg._2
         val pq = q.subtract(p)
         val cross = pq.cross(point.subtract(p))
         val c = makeCircumCircle(p, q, point)
         if (c != null) {
-          if (cross > 0 && (left == null || pq.cross(c.centre.subtract(p)) > pq.cross(left.centre.subtract(p))))
-            left = c
-          else if (cross < 0 && (right == null || pq.cross(c.centre.subtract(p)) < pq.cross(right.centre.subtract(p))))
-            right = c
+          if (cross > 0 && (left.isEmpty || pq.cross(c.centre.subtract(p)) > pq.cross(left.get.centre.subtract(p))))
+            left = Some(c)
+          else if (cross < 0 && (right.isEmpty || pq.cross(c.centre.subtract(p)) < pq.cross(right.get.centre.subtract(p))))
+            right = Some(c)
         }
+        (left, right)
       })
-      if (right == null || left != null && left.radius <= right.radius)
-        left
+
+      if (leftAndRight._2.isEmpty || leftAndRight._1.isDefined && leftAndRight._1.get.radius <= leftAndRight._2.get.radius)
+        leftAndRight._1.getOrElse(null)
       else
-        right
+        leftAndRight._2.getOrElse(null)
     }
   }
 

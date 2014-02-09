@@ -19,4 +19,6 @@ case class Point(val x: Double, val y: Double) {
     x * point.y - y * point.x
 
   def normal = x * x + y * y
+
+  override def toString = "Point(x = %f; y = %f)".format(x, y)
 }

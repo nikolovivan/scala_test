@@ -11,4 +11,6 @@ case class Circle(val centre: Point, val radius: Double) {
 
   def contains(points: Seq[Point]): Boolean =
     !points.exists(p => !contains(p))
+
+  override def toString = "Centre: %s\nRadius: %f".format(centre.toString, radius)
 }
