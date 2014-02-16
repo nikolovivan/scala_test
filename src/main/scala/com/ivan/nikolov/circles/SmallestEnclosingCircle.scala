@@ -66,7 +66,7 @@ case class SmallestEnclosingCircle(points: Point*) {
     (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) * 2 match {
       case 0 => null
       case d: Double => {
-        val x = (a.normal * (b.y - c.y) + b.normal * (c.y - a.y) * c.normal * (a.y - b.y)) / d
+        val x = (a.normal * (b.y - c.y) + b.normal * (c.y - a.y) + c.normal * (a.y - b.y)) / d
         val y = (a.normal * (c.x - b.x) + b.normal * (a.x - c.x) + c.normal * (b.x - a.x)) / d
         val centre = Point(x, y)
         Circle(centre, centre.distance(a))
