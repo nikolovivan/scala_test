@@ -2,6 +2,9 @@ package com.ivan.nikolov.circles
 
 /**
  * Created by volcom on 06/02/14.
+ * 
+ * Adapted with permission from Nayuki's source code
+ * (http://nayuki.eigenstate.org/page/smallest-enclosing-circle)
  */
 case class Circle(val centre: Point, val radius: Double) {
   val EPSILON = 1e-12

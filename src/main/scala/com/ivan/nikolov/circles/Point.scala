@@ -6,6 +6,9 @@ import scala.math._
  * A class that represents a point in the 2d plain.
  *
  * Created by volcom on 06/02/14.
+ *
+ * Adapted with permission from Nayuki's source code
+ * (http://nayuki.eigenstate.org/page/smallest-enclosing-circle)
  */
 case class Point(val x: Double, val y: Double) {
 
