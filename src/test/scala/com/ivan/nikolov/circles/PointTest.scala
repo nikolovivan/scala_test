@@ -19,4 +19,18 @@ class PointTest extends FlatSpec with ShouldMatchers {
     val normal = p1.normal
     normal should equal(p1.x * p1.x + p1.y * p1.y)
   }
+
+  "cross" should "be the crossed between the two points." in {
+    val p1 = Point(83.34, 48.3)
+    val p2 = Point(34.4, 23.3)
+    val cross = p1.cross(p2)
+    cross should equal(p1.x * p2.y - p1.y * p2.x)
+  }
+
+  "distance" should "be the hypot definition." in {
+    val p1 = Point(2, 3)
+    val p2 = Point(6, 7)
+    val distance = p1.distance(p2)
+    distance should equal(math.sqrt(32))
+  }
 }
