@@ -3,8 +3,6 @@ package com.ivan.nikolov.circles
 import scala.util.Random
 
 /**
- * Created by volcom on 06/02/14.
- *
  * Adapted with permission from Nayuki's source code
  * (http://nayuki.eigenstate.org/page/smallest-enclosing-circle)
  */
