@@ -48,7 +48,7 @@ object GUIRunner extends SimpleSwingApplication {
 
     override def paint(g: Graphics2D) {
       super.paint(g)
-      val circle = findSmallestCircle
+      val circle = findSmallestCircle()
       if (circle != null) {
         // draw it
         drawCircle(g, Color.CYAN, circle)

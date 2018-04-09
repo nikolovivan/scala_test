@@ -1,3 +1,14 @@
-libraryDependencies += "org.scala-lang" % "scala-swing" % "2.10.3"
+organization := "com.ivan.nikolov"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+name := "scala_test"
+
+scalaVersion := "2.12.5"
+
+scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+
+javaOptions ++= Seq("-target", "1.8", "-source", "1.8")
+
+libraryDependencies ++= Seq(
+  "org.scala-lang.modules" %% "scala-swing" % "2.0.3",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+)

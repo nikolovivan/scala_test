@@ -1,11 +1,8 @@
 package com.ivan.nikolov.circles
 
-import org.scalatest.{ShouldMatchers, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 
-/**
- * Created by volcom on 27/02/14.
- */
-class PointTest extends FlatSpec with ShouldMatchers {
+class PointTest extends FlatSpec with Matchers {
   "subtract" should "subtract the x and y values of different points." in {
     val p1 = Point(21.5, 845.9)
     val p2 = Point(34.5, 56.7)

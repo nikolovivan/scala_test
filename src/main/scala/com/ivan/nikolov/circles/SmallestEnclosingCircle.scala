@@ -14,13 +14,14 @@ case class SmallestEnclosingCircle(points: Point*) {
 
   private def makeCircleShuffled(shuffled: Seq[Point]): Circle =
     shuffled.foldLeft((None: Option[Circle], 0))((agg, p) => {
-      var currCircle = agg._1
+      val currCircle = agg._1
       val index = agg._2
       if (currCircle.isEmpty || !currCircle.get.contains(p)) {
-        currCircle = Some(makeCircleOnePoint(shuffled.slice(0, index + 1), p))
+        (Some(makeCircleOnePoint(shuffled.slice(0, index + 1), p)), index + 1)
+      } else {
+        (currCircle, index + 1)
       }
-      (currCircle, index + 1)
-    })._1.getOrElse(null)
+    })._1.orNull
 
   private def makeCircleOnePoint(pointsSeq: Seq[Point], point: Point): Circle =
     pointsSeq.foldLeft((Circle(point, 0), 0))((agg, p) => {
@@ -46,18 +47,20 @@ case class SmallestEnclosingCircle(points: Point*) {
         val cross = pq.cross(point.subtract(p))
         val c = makeCircumCircle(p, q, point)
         if (c != null) {
-          if (cross > 0 && (left.isEmpty || pq.cross(c.centre.subtract(p)) > pq.cross(left.get.centre.subtract(p))))
+          if (cross > 0 && (left.isEmpty || pq.cross(c.centre.subtract(p)) > pq.cross(left.get.centre.subtract(p)))) {
             left = Some(c)
-          else if (cross < 0 && (right.isEmpty || pq.cross(c.centre.subtract(p)) < pq.cross(right.get.centre.subtract(p))))
+          } else if (cross < 0 && (right.isEmpty || pq.cross(c.centre.subtract(p)) < pq.cross(right.get.centre.subtract(p)))) {
             right = Some(c)
+          }
         }
         (left, right)
       })
 
-      if (leftAndRight._2.isEmpty || leftAndRight._1.isDefined && leftAndRight._1.get.radius <= leftAndRight._2.get.radius)
-        leftAndRight._1.getOrElse(null)
-      else
-        leftAndRight._2.getOrElse(null)
+      if (leftAndRight._2.isEmpty || leftAndRight._1.isDefined && leftAndRight._1.get.radius <= leftAndRight._2.get.radius) {
+        leftAndRight._1.orNull
+      } else {
+        leftAndRight._2.orNull
+      }
     }
   }
 
@@ -68,11 +71,10 @@ case class SmallestEnclosingCircle(points: Point*) {
   private def makeCircumCircle(a: Point, b: Point, c: Point): Circle =
     (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) * 2 match {
       case 0 => null
-      case d: Double => {
+      case d: Double =>
         val x = (a.normal * (b.y - c.y) + b.normal * (c.y - a.y) + c.normal * (a.y - b.y)) / d
         val y = (a.normal * (c.x - b.x) + b.normal * (a.x - c.x) + c.normal * (b.x - a.x)) / d
         val centre = Point(x, y)
         Circle(centre, centre.distance(a))
-      }
   }
 }
